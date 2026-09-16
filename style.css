@@ -1,0 +1,1014 @@
+:root {
+    --bg: #000;
+    --accent: #ffcc00;
+    --gold: #ffb300;
+    --white: #fff;
+    --muted: #888;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background: #000;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #000;
+    color: #fff;
+    overflow-x: hidden;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    padding: 22px 5%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    z-index: 1000;
+
+    background: linear-gradient(
+        180deg,
+        rgba(0,0,0,.92),
+        transparent
+    );
+
+    pointer-events: none;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 900;
+
+    pointer-events: auto;
+
+    will-change: transform, opacity;
+}
+
+.dot {
+    color: var(--accent);
+}
+
+.nav-controls {
+    display: flex;
+    gap: 10px;
+
+    pointer-events: auto;
+}
+
+.nav-controls button {
+    background: rgba(255,255,255,.06);
+
+    border: 1px solid rgba(255,255,255,.15);
+
+    color: white;
+
+    padding: 9px 18px;
+
+    border-radius: 30px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    backdrop-filter: blur(12px);
+
+    transition: .3s;
+}
+
+.nav-controls button:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero-section {
+    position: relative;
+
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #202020 0%,
+            #080808 55%,
+            #000 100%
+        );
+}
+
+.hero-section::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle,
+            transparent 15%,
+            rgba(0,0,0,.8)
+        );
+
+    pointer-events: none;
+}
+
+.wheel-container {
+    position: absolute;
+
+    width: 600px;
+    max-width: 75vw;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    opacity: .3;
+
+    z-index: 1;
+}
+
+.wheel-container img {
+    width: 100%;
+}
+
+.hero-content {
+    position: relative;
+
+    z-index: 5;
+
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-kicker {
+    color: var(--accent);
+
+    font-size: .7rem;
+
+    letter-spacing: 7px;
+
+    margin-bottom: 20px;
+}
+
+.main-title {
+    font-size: clamp(4rem, 9vw, 8rem);
+
+    font-weight: 900;
+
+    line-height: .9;
+
+    margin-bottom: 25px;
+}
+
+.sub-title {
+    color: #ddd;
+
+    max-width: 520px;
+
+    margin-bottom: 30px;
+
+    padding: 10px 20px;
+
+    border-radius: 30px;
+
+    background: rgba(0,0,0,.5);
+
+    backdrop-filter: blur(12px);
+}
+
+.car-selector select {
+    min-width: 270px;
+
+    padding: 13px 25px;
+
+    border-radius: 8px;
+
+    background: #0b0b0b;
+
+    color: var(--accent);
+
+    border: 1px solid rgba(255,204,0,.4);
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+.scroll-indicator {
+    margin-top: 55px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 12px;
+
+    color: rgba(255,255,255,.4);
+
+    font-size: .6rem;
+
+    letter-spacing: 3px;
+}
+
+.scroll-line {
+    width: 1px;
+
+    height: 55px;
+
+    background:
+        linear-gradient(
+            white,
+            transparent
+        );
+}
+
+
+/* =====================================================
+   CINEMATIC EXPERIENCE
+===================================================== */
+
+.car-experience {
+    position: relative;
+
+    width: 100%;
+
+    height: 100vh;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            #171717 0%,
+            #080808 45%,
+            #000 100%
+        );
+}
+
+
+/* =====================================================
+   BACKGROUND
+===================================================== */
+
+.experience-bg {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 50% 42%,
+            rgba(255,204,0,.09),
+            transparent 30%
+        );
+
+    z-index: 1;
+
+    pointer-events: none;
+}
+
+.experience-glow {
+    position: absolute;
+
+    width: 500px;
+    height: 500px;
+
+    border-radius: 50%;
+
+    filter: blur(130px);
+
+    opacity: .13;
+
+    pointer-events: none;
+
+    z-index: 2;
+}
+
+.glow-one {
+    background: #ffcc00;
+
+    left: -250px;
+    top: 20%;
+}
+
+.glow-two {
+    background: #ffb300;
+
+    right: -250px;
+    bottom: 15%;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.experience-header {
+    position: absolute;
+
+    top: 6%;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    z-index: 20;
+
+    pointer-events: none;
+}
+
+.section-tag {
+    color: var(--accent);
+
+    font-size: .7rem;
+
+    letter-spacing: 4px;
+
+    font-weight: bold;
+}
+
+.section-number {
+    color: rgba(255,255,255,.3);
+
+    font-size: .7rem;
+
+    letter-spacing: 3px;
+}
+
+
+/* =====================================================
+   3D CONTAINER
+===================================================== */
+
+#car3DContainer {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 10;
+
+    pointer-events: auto;
+
+    touch-action: none;
+}
+
+#car3DContainer canvas {
+    position: absolute !important;
+
+    inset: 0;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    display: block;
+
+    pointer-events: auto !important;
+
+    touch-action: none;
+}
+
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.car-title-overlay {
+    position: absolute;
+
+    top: 15%;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 100%;
+
+    text-align: center;
+
+    z-index: 30;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+.car-brand-label {
+    display: block;
+
+    color: var(--accent);
+
+    font-size: .7rem;
+
+    letter-spacing: 8px;
+
+    margin-bottom: 12px;
+}
+
+.car-title-overlay h2 {
+    font-size:
+        clamp(
+            3rem,
+            7vw,
+            7rem
+        );
+
+    line-height: .9;
+
+    font-weight: 900;
+
+    text-shadow:
+        0 20px 70px #000;
+}
+
+.title-line {
+    width: 70px;
+
+    height: 2px;
+
+    background: var(--accent);
+
+    margin: 20px auto 12px;
+}
+
+#cinematicYear {
+    color: rgba(255,255,255,.45);
+
+    font-size: .7rem;
+
+    letter-spacing: 5px;
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.cinematic-card {
+    position: absolute;
+
+    top: 50%;
+    right: 6%;
+
+    transform:
+        translateY(-50%);
+
+    width: 390px;
+
+    padding: 30px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(25,25,28,.94),
+            rgba(8,8,10,.88)
+        );
+
+    border:
+        1px solid
+        rgba(255,204,0,.25);
+
+    border-radius: 18px;
+
+    backdrop-filter: blur(25px);
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.8);
+
+    z-index: 50;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+.card-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    color: var(--accent);
+
+    font-size: .6rem;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 25px;
+}
+
+.card-index {
+    color: rgba(255,255,255,.3);
+}
+
+.cinematic-card h3 {
+    font-size: 2rem;
+
+    margin-bottom: 15px;
+}
+
+.card-description {
+    color: #999;
+
+    font-size: .9rem;
+
+    line-height: 1.8;
+
+    margin-bottom: 25px;
+}
+
+.cinematic-specs {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+}
+
+.cinematic-spec:first-child {
+    grid-column: 1 / -1;
+}
+
+.cinematic-spec {
+    padding: 14px;
+
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.04);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.spec-label {
+    color: #777;
+
+    font-size: .55rem;
+
+    letter-spacing: 2px;
+}
+
+.cinematic-spec strong {
+    font-size: .95rem;
+}
+
+.price-area {
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.08);
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.price-area span {
+    color: #777;
+
+    font-size: .55rem;
+
+    letter-spacing: 2px;
+}
+
+.price-area strong {
+    color: var(--accent);
+
+    font-size: 1.6rem;
+}
+
+.card-footer {
+    margin-top: 25px;
+
+    padding-top: 15px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.06);
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #555;
+
+    font-size: .55rem;
+
+    letter-spacing: 2px;
+}
+
+.arrow {
+    color: var(--accent);
+
+    font-size: 1.2rem;
+}
+
+
+/* =====================================================
+   STORY
+===================================================== */
+
+.story-section {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 40;
+
+    pointer-events: none;
+}
+
+.story-item {
+    position: absolute;
+
+    left: 7%;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%)
+        translateX(-100px);
+
+    opacity: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    text-align: left;
+}
+
+.story-item span {
+    color: var(--accent);
+
+    font-size: .7rem;
+
+    letter-spacing: 4px;
+}
+
+.story-item strong {
+    font-size:
+        clamp(
+            5rem,
+            11vw,
+            10rem
+        );
+
+    line-height: .8;
+
+    font-weight: 900;
+}
+
+.story-item small {
+    color: #777;
+
+    letter-spacing: 5px;
+
+    font-size: .6rem;
+
+    margin-top: 15px;
+}
+
+
+/* =====================================================
+   BOTTOM
+===================================================== */
+
+.experience-bottom {
+    position: absolute;
+
+    bottom: 45px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    z-index: 80;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: rgba(255,255,255,.3);
+
+    font-size: .55rem;
+
+    letter-spacing: 3px;
+
+    pointer-events: none;
+}
+
+.bottom-line {
+    width: 80px;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--accent),
+            transparent
+        );
+}
+
+
+/* =====================================================
+   FINAL DETAILS
+===================================================== */
+
+.details-section {
+    position: relative;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #151515,
+            #000 65%
+        );
+}
+
+.final-details {
+    opacity: 0;
+
+    transform:
+        translateY(60px);
+}
+
+.final-details h2 {
+    font-size:
+        clamp(
+            3rem,
+            7vw,
+            7rem
+        );
+
+    font-weight: 900;
+
+    margin: 20px 0;
+}
+
+.final-details p {
+    color: #777;
+
+    margin-bottom: 25px;
+}
+
+.final-price {
+    color: var(--accent);
+
+    font-size: 2rem;
+
+    font-weight: 900;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer {
+    background: #000;
+
+    text-align: center;
+
+    padding: 30px;
+
+    color: #555;
+
+    font-size: .7rem;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.06);
+}
+
+.site-footer {
+    padding: 45px 20px;
+
+    text-align: center;
+
+    background: #050505;
+
+    border-top:
+        1px solid
+        rgba(255, 204, 0, 0.15);
+}
+
+.site-footer p {
+    margin: 0;
+
+    color: #777;
+
+    font-size: 14px;
+
+    letter-spacing: 1px;
+}
+
+.site-footer span {
+    color: #ffcc00;
+
+    font-weight: 600;
+}
+
+.site-footer .footer-subtitle {
+    margin-top: 10px;
+
+    font-size: 11px;
+
+    color: #444;
+
+    letter-spacing: 1.5px;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .cinematic-card {
+        width: 350px;
+
+        right: 4%;
+
+        top: 53%;
+    }
+
+    .story-item {
+        left: 5%;
+    }
+
+    .story-item strong {
+        font-size: 6rem;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .navbar {
+        padding: 15px 20px;
+    }
+
+    .logo {
+        font-size: 1.4rem;
+    }
+
+    .nav-controls button {
+        padding: 7px 10px;
+        font-size: .7rem;
+    }
+
+    .main-title {
+        font-size: 4rem;
+    }
+
+    .sub-title {
+        font-size: .9rem;
+
+        max-width: 90%;
+    }
+
+    .car-selector select {
+        min-width: 220px;
+    }
+
+    .experience-header {
+        top: 6%;
+        left: 50%;
+
+        transform: translateX(-50%);
+
+        width: 100%;
+
+        justify-content: center;
+
+        text-align: center;
+    }
+
+    .car-title-overlay {
+        top: 14%;
+    }
+
+    .car-title-overlay h2 {
+        font-size: 2.5rem;
+    }
+
+    .cinematic-card {
+        width: 90vw;
+
+        right: 5%;
+
+        top: 59%;
+
+        padding: 20px;
+    }
+
+    .cinematic-card h3 {
+        font-size: 1.5rem;
+    }
+
+    .card-description {
+        font-size: .78rem;
+
+        margin-bottom: 15px;
+    }
+
+    .cinematic-spec {
+        padding: 10px;
+    }
+
+    .price-area {
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+
+    .card-footer {
+        margin-top: 15px;
+    }
+
+    .story-item {
+        left: 7%;
+
+        top: 50%;
+    }
+
+    .story-item strong {
+        font-size: 4.5rem;
+    }
+
+    .story-item small {
+        font-size: .5rem;
+    }
+
+    .final-details h2 {
+        font-size: 2.8rem;
+    }
+}

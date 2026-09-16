@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>الجراج | El Garage</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- THREE.JS -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+        }
+    }
+    </script>
+</head>
+
+<body>
+
+    <!-- ==========================================
+         NAVBAR
+    ========================================== -->
+
+    <<header class="navbar">
+
+    <div class="logo" id="garageLogo">
+        الجراج<span class="dot">.</span>
+    </div>
+
+    <div class="nav-controls">
+
+        <button id="langToggle">
+            EN
+        </button>
+
+        <button id="currencyToggle">
+            EGP 🇪🇬
+        </button>
+
+    </div>
+
+</header>
+
+    <!-- ==========================================
+         HERO
+    ========================================== -->
+
+    <section class="hero-section">
+
+        <div class="wheel-container">
+
+            <img
+                src="./images/bbs.png"
+                alt="BBS Wheel"
+                id="bbsWheelImg"
+            >
+
+        </div>
+
+
+        <div class="hero-content">
+
+            <span class="hero-kicker">
+                عشاق الأداء
+            </span>
+
+            <h1 class="main-title" id="mainHeadingText">
+    الجراج<span class="dot">.</span>
+</h1>
+            </h1>
+
+            <p class="sub-title">
+                 عالم السرعة.
+
+            </p>
+
+
+            <div class="car-selector">
+
+                <select id="carSelect"></select>
+
+            </div>
+
+
+            <div class="scroll-indicator">
+
+                <span>
+                    SCROLL TO EXPLORE
+                </span>
+
+                <div class="scroll-line"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         CINEMATIC 3D EXPERIENCE
+    ========================================== -->
+
+    <section class="car-experience" id="carExperience">
+
+        <!-- Background -->
+
+        <div class="experience-bg"></div>
+
+        <div class="experience-glow glow-one"></div>
+        <div class="experience-glow glow-two"></div>
+
+
+        <!-- Header -->
+
+        <div class="experience-header">
+
+            <span class="section-tag">
+                EL GARAGE / 3D
+            </span>
+
+            <span class="section-number">
+                01
+            </span>
+
+        </div>
+
+
+        <!-- 3D CAR -->
+
+        <div id="car3DContainer"></div>
+
+
+        <!-- Cinematic Title -->
+
+        <div class="car-title-overlay">
+
+            <span class="car-brand-label" id="cinematicBrand">
+                BMW
+            </span>
+
+            <h2 id="cinematicTitle">
+                M5 Competition
+            </h2>
+
+            <div class="title-line"></div>
+
+            <span id="cinematicYear">
+                2026
+            </span>
+
+        </div>
+
+
+        <!-- ======================================
+             MAIN CARD
+        ====================================== -->
+
+        <div class="cinematic-card" id="cinematicCard">
+
+            <div class="card-top">
+
+                <span>
+                    PERFORMANCE
+                </span>
+
+                <span class="card-index">
+                    01 / 04
+                </span>
+
+            </div>
+
+
+            <h3 id="carTitle">
+                BMW M5 Competition
+            </h3>
+
+
+            <p class="card-description">
+                أداء استثنائي يجمع بين القوة والتكنولوجيا
+                والهندسة الألمانية.
+            </p>
+
+
+            <div class="cinematic-specs">
+
+                <div class="cinematic-spec">
+
+                    <span class="spec-label">
+                        ENGINE
+                    </span>
+
+                    <strong id="specEngine">
+                        4.4L V8 Twin-Turbo
+                    </strong>
+
+                </div>
+
+
+                <div class="cinematic-spec">
+
+                    <span class="spec-label">
+                        POWER
+                    </span>
+
+                    <strong id="specHp">
+                        625 حصان
+                    </strong>
+
+                </div>
+
+
+                <div class="cinematic-spec">
+
+                    <span class="spec-label">
+                        0 — 100
+                    </span>
+
+                    <strong id="specAcc">
+                        3.3 ثواني
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="price-area">
+
+                <span>
+                    ESTIMATED PRICE
+                </span>
+
+                <strong id="carPrice">
+                    8,500,000 ج.م
+                </strong>
+
+            </div>
+
+
+            <div class="card-footer">
+
+                <span>
+                    DRAG TO ROTATE
+                </span>
+
+                <span class="arrow">
+                    ↗
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             SCROLL STORY
+        ====================================== -->
+
+        <div class="story-section">
+
+            <div class="story-item story-engine">
+
+                <span>
+                    POWER
+                </span>
+
+                <strong>
+                    V8
+                </strong>
+
+                <small>
+                    TWIN TURBO
+                </small>
+
+            </div>
+
+
+            <div class="story-item story-performance">
+
+                <span>
+                    PERFORMANCE
+                </span>
+
+                <strong>
+                    625
+                </strong>
+
+                <small>
+                    HORSEPOWER
+                </small>
+
+            </div>
+
+
+            <div class="story-item story-speed">
+
+                <span>
+                    0 — 100 KM/H
+                </span>
+
+                <strong>
+                    3.3
+                </strong>
+
+                <small>
+                    SECONDS
+                </small>
+
+            </div>
+
+
+            <div class="story-item story-price">
+
+                <span>
+                    PRICE
+                </span>
+
+                <strong id="storyPrice">
+                    8.5M
+                </strong>
+
+                <small>
+                    EGP
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- Bottom -->
+
+        <div class="experience-bottom">
+
+            <span>
+                SCROLL TO DISCOVER
+            </span>
+
+            <div class="bottom-line"></div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         FINAL DETAILS
+    ========================================== -->
+
+    <section class="details-section">
+
+        <div class="final-details">
+
+            <span class="section-tag">
+                THE MACHINE
+            </span>
+
+            <h2 id="finalCarTitle">
+                BMW M5 Competition
+            </h2>
+
+            <p>
+                تجربة السيارة تبدأ من هنا
+            </p>
+
+            <div class="final-price" id="finalPrice">
+                8,500,000 ج.م
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         FOOTER
+    ========================================== -->
+
+    <footer class="site-footer">
+
+    <p>
+        Created by <span>Mo'men Gamil ELHARIRI</span>
+    </p>
+
+    <p class="footer-subtitle">
+        © 2026 El Garage. All rights reserved.
+    </p>
+
+</footer>
+
+
+    <!-- DATA -->
+
+    <script src="data/cars.js"></script>
+
+    <!-- MAIN -->
+
+    <script
+        type="module"
+        src="main.js">
+    </script>
+
+</body>
+
+</html>
