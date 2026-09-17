@@ -2143,8 +2143,8 @@ function loadCar(
 ===================================================== */
 
 function initCinematicScroll() {
-
-    if (!carExperience) {
+    if (window.innerWidth <= 900) {
+        // لو موبايل، نلغي عك الـ GSAP ونعتمد على الـ Layout العادي
         return;
     }
 
