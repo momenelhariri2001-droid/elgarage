@@ -107,6 +107,11 @@ body {
 
     width: 100%;
     height: 100vh;
+    /* FIX — 100svh بيتجاهل شريط العنوان المتحرك في متصفح
+       الموبايل، فالارتفاع بيفضل ثابت وانت بتسكرول، وده
+       بيمنع باج تداخل الأقسام فوق بعض. المتصفحات اللي
+       مش فاهمة svh هتفضل شغالة بـ100vh العادي فوقيها. */
+    height: 100svh;
 
     display: flex;
 
@@ -267,6 +272,7 @@ body {
     width: 100%;
 
     height: 100vh;
+    height: 100svh;
 
     overflow: hidden;
 
@@ -776,6 +782,7 @@ body {
     position: relative;
 
     min-height: 100vh;
+    min-height: 100svh;
 
     display: flex;
 

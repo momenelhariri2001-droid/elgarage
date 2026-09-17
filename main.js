@@ -1,7 +1,43 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
 gsap.registerPlugin(ScrollTrigger);
+
+/* =====================================================
+   FIX #1 — باج التداخل على الموبايل (overlap bug)
+   شريط العنوان في متصفح الموبايل بيظهر ويختفي وهو انت
+   بتسكرول، وده بيغيّر window.innerHeight كل شوية.
+   GSAP ScrollTrigger كان بياخد الحركة دي كـ "resize"
+   حقيقي وبيعيد حساب أماكن كل الـpinned sections تاني
+   وهي لسه شغالة — وده اللي بيسبب إن كل حاجة تدخل في بعض.
+   السطر ده بيقول لـScrollTrigger يتجاهل الرجفة دي.
+===================================================== */
+ScrollTrigger.config({ ignoreMobileResize: true });
+
+/* =====================================================
+   FIX #2 — كشف الأجهزة الضعيفة
+   بنستخدمه عشان نقفل الظلال والـantialiasing وموديلات
+   التفاصيل الزيادة على الموبايل والأجهزة القديمة، وده
+   اللي كان بيخلي الموقع "يهنج" أو يقفل نفسه على الفون.
+===================================================== */
+const isMobile =
+    matchMedia("(max-width: 900px)").matches ||
+    ("ontouchstart" in window && matchMedia("(pointer: coarse)").matches);
+
+const isLowPower =
+    isMobile &&
+    (typeof navigator.deviceMemory === "number"
+        ? navigator.deviceMemory <= 4
+        : true);
+
+function debounce(fn, wait) {
+    let t = null;
+    return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...args), wait);
+    };
+}
 
 
 /* =====================================================
@@ -57,8 +93,30 @@ let renderer = null;
 
 let currentModel = null;
 let currentFloor = null;
+let rafId = null;
+
+/* =====================================================
+   FIX #3 — تحميل موديلات مضغوطة (Draco)
+   موديلات GLB بتاعت BMW / Porsche غالباً كبيرة جداً
+   (ممكن تكون ٥٠-٢٠٠ ميجا للموديل الواحد من غير ضغط).
+   على الفون ده بيخلص الرامات المتاحة للمتصفح ويكسر
+   الـWebGL context تماماً — ده سبب رئيسي إن "كل حاجة
+   بايظة" على الموبايل تحديداً.
+
+   الحل الكامل: تضغط الموديلات نفسها مرة واحدة بأمر
+   زي:  npx gltf-transform optimize model.glb model.glb
+   أو:  gltfpack -i model.glb -o model.glb -cc
+   وبعدين الـDRACOLoader هنا هيقدر يفك الضغط في المتصفح.
+   لو الملفات لسه مش مضغوطة، السطور دي مش هتأذي حاجة —
+   بس الفايدة الحقيقية مش هتظهر غير بعد ضغط الملفات.
+===================================================== */
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath(
+    "https://www.gstatic.com/draco/versioned/decoders/1.5.7/"
+);
 
 const loader = new GLTFLoader();
+loader.setDRACOLoader(dracoLoader);
 
 let cinematicTimeline = null;
 
@@ -666,7 +724,9 @@ function initThree() {
     renderer =
         new THREE.WebGLRenderer({
 
-            antialias: true,
+            /* FIX #4 — antialias بيكلف أضعاف الأداء على GPU
+               الموبايل الضعيف. نقفله على isLowPower بس. */
+            antialias: !isLowPower,
 
             alpha: true,
 
@@ -678,7 +738,9 @@ function initThree() {
     renderer.setPixelRatio(
         Math.min(
             window.devicePixelRatio,
-            2
+            /* FIX #5 — pixel ratio أعلى = رندر أتقل بشكل تربيعي.
+               نقفله على 1.5 على الموبايل بدل 2-3. */
+            isMobile ? 1.5 : 2
         )
     );
 
@@ -701,12 +763,40 @@ function initThree() {
         1.15;
 
 
+    /* FIX #6 — الظلال (shadow maps) من أتقل حاجات على
+       الـGPU، وأغلب الفونات المتوسطة بتتهنق منها. نقفلها
+       تماماً على الأجهزة الضعيفة. */
     renderer.shadowMap.enabled =
-        true;
+        !isLowPower;
 
 
     renderer.shadowMap.type =
         THREE.PCFSoftShadowMap;
+
+
+    /* FIX #7 — لو الـGPU فقد الـWebGL context (بيحصل
+       كتير على فونات الرام القليلة لما تكون فاتح تابات
+       تانية)، الموقع كان بيفضل شاشة سودا مكسورة للأبد.
+       دلوقتي بنمسك الحدث ونعيد بناء المشهد. */
+    renderer.domElement.addEventListener(
+        "webglcontextlost",
+        (event) => {
+            event.preventDefault();
+            console.warn("WebGL context lost — إعادة المحاولة…");
+            cancelAnimationFrame(rafId);
+        },
+        false
+    );
+
+    renderer.domElement.addEventListener(
+        "webglcontextrestored",
+        () => {
+            console.warn("WebGL context restored — إعادة تحميل المشهد.");
+            initThree();
+            loadCar(currentCarKey);
+        },
+        false
+    );
 
 
     car3DContainer.innerHTML = "";
@@ -758,8 +848,14 @@ function initThree() {
         6
     );
 
+    /* FIX #6 (تكملة) — نفس السبب: castShadow على لايت واحد
+       بس كفاية يخلي الرندر تلات أو أربع أضعاف أتقل. */
     keyLight.castShadow =
-        true;
+        !isLowPower;
+
+    if (keyLight.castShadow) {
+        keyLight.shadow.mapSize.set(1024, 1024);
+    }
 
     scene.add(keyLight);
 
@@ -848,7 +944,7 @@ function initThree() {
 
 
     currentFloor.receiveShadow =
-        true;
+        !isLowPower;
 
 
     scene.add(currentFloor);
@@ -857,9 +953,22 @@ function initThree() {
     initCarMouseRotation();
 
 
+    /* FIX #8 — resize كان بيتنادى مباشرة من غير debounce.
+       على الموبايل، أي رجفة في شريط العنوان كانت بتطلق
+       عشرات نداءات resize في الثانية وتخلي الرندر يهنج.
+       الـdebounce بيخلي الحساب يحصل مرة واحدة بس لما
+       المستخدم يوقف عن تغيير حجم الشاشة فعلاً. */
     window.addEventListener(
         "resize",
-        resizeThree
+        debounce(resizeThree, 150)
+    );
+
+    window.addEventListener(
+        "orientationchange",
+        () => setTimeout(() => {
+            resizeThree();
+            ScrollTrigger.refresh();
+        }, 250)
     );
 
 
@@ -1055,7 +1164,7 @@ function resizeThree() {
 
 function animate() {
 
-    requestAnimationFrame(
+    rafId = requestAnimationFrame(
         animate
     );
 
@@ -1972,12 +2081,15 @@ function loadCar(
                     }
 
 
+                    /* FIX #6 (تكملة) — نفس منطق تقليل
+                       تكلفة الظلال على الأجهزة الضعيفة،
+                       بس هنا على كل قطعة في الموديل نفسه. */
                     child.castShadow =
-                        true;
+                        !isLowPower;
 
 
                     child.receiveShadow =
-                        true;
+                        !isLowPower;
 
 
                     if (
@@ -2091,6 +2203,9 @@ function loadCar(
             );
 
 
+            const oldError = car3DContainer?.querySelector(".model-error-msg");
+            if (oldError) oldError.remove();
+
             console.log(
                 "CAR LOADED:",
                 car.brand,
@@ -2140,6 +2255,28 @@ function loadCar(
                     duration: 0.3
                 }
             );
+
+            /* FIX #9 — قبل كده لما الموديل يفشل يحمل
+               (رابط غلط، ملف كبير جداً، أو الملف مش
+               موجود فعلاً على Vercel)، الشاشة كانت
+               تفضل سودا من غير أي رسالة، وده بالظبط
+               اللي بيبان للمستخدم إنه "كل حاجة بايظة".
+               دلوقتي بنكتب رسالة واضحة بدل السكوت. */
+            if (car3DContainer) {
+                const old = car3DContainer.querySelector(".model-error-msg");
+                if (old) old.remove();
+
+                const msg = document.createElement("div");
+                msg.className = "model-error-msg";
+                msg.style.cssText =
+                    "position:absolute;inset:0;display:flex;align-items:center;" +
+                    "justify-content:center;text-align:center;color:#888;" +
+                    "font-size:.85rem;padding:20px;pointer-events:none;z-index:5;";
+                msg.textContent =
+                    `تعذّر تحميل موديل ${car.brand} ${car.model} — تأكد إن رابط ` +
+                    `الملف صحيح ومرفوع فعلاً ضمن الموقع على Vercel.`;
+                car3DContainer.appendChild(msg);
+            }
         }
     );
 }
@@ -2272,8 +2409,14 @@ function initCinematicScroll() {
                 start:
                     "top top",
 
+                /* FIX #10 — "+=5600" ثابت كان بيدي نفس مسافة
+                   السكرول الطويلة على شاشة موبايل صغيرة زي ما
+                   بيديها على شاشة ديسكتوب كبيرة، فالتجربة كانت
+                   تحس إنها بطيئة وثقيلة جداً على الفون. دلوقتي
+                   المسافة بتتحسب من ارتفاع الشاشة الفعلي، وGSAP
+                   بيعيد حسابها لوحده مع invalidateOnRefresh. */
                 end:
-                    "+=5600",
+                    () => (isMobile ? "+=3200" : "+=5600"),
 
                 scrub:
                     1,
@@ -2635,3 +2778,15 @@ if (
 
     init();
 }
+
+/* =====================================================
+   FIX #11 — تحديث حسابات الـScrollTrigger بعد ما كل
+   حاجة (خطوط، صور) تخلص تحميل فعلياً.
+   لو الخط أو صورة العجلة اتحمّلت متأخر شوية بعد ما
+   ScrollTrigger حسب أماكن الأقسام، الارتفاعات بتتغيّر
+   من تحته وهو مش عارف — فبتحصل نفس مشكلة "كل حاجة
+   بتدخل في بعض" حتى من غير أي مشكلة في الموبايل نفسه.
+===================================================== */
+window.addEventListener("load", () => {
+    setTimeout(() => ScrollTrigger.refresh(), 300);
+});
