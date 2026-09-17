@@ -679,12 +679,21 @@ function initThree() {
         });
 
 
-    renderer.setPixelRatio(
-        Math.min(
-            window.devicePixelRatio,
-            2
-        )
+    window.addEventListener('pointerdown', (event) => {
+    const pointer = new THREE.Vector2(
+        (event.clientX / window.innerWidth) * 2 - 1,
+        -(event.clientY / window.innerHeight) * 2 + 1
     );
+    raycaster.setFromCamera(pointer, camera);
+    const intersects = raycaster.intersectObjects(scene.children, true);
+    if (intersects.length > 0) {
+        const clickedObj = intersects[0].object;
+        console.log('Clicked object:', clickedObj.name);
+        
+        // استبدل السطر ده بدالة الاختيار عندك، مثال:
+        // selectCarByMesh(clickedObj);
+    }
+});
 
 
     renderer.setSize(
@@ -1037,12 +1046,7 @@ function resizeThree() {
     );
 
 
-    renderer.setPixelRatio(
-        Math.min(
-            window.devicePixelRatio,
-            2
-        )
-    );
+    
 }
 
 
