@@ -1020,18 +1020,16 @@ body {
 @media (max-width: 900px) {
     .car-experience {
         height: auto !important;
+        min-height: unset !important;
         position: relative !important;
         overflow: visible !important;
+        padding: 40px 16px !important;
     }
 
     #car3DContainer {
-        position: relative !important;
-        width: 100% !important;
-        height: 320px !important;
-        z-index: 1;
+        display: none !important; /* إخفاء الكانفاس الثقيل تماماً على الموبايل */
     }
 
-    /* ضمان إن النصوص تظهر تحت بعضها بشكل طبيعي ومن غير تداخل */
     .car-title-overlay,
     .cinematic-card,
     .story-section,
@@ -1040,6 +1038,7 @@ body {
         opacity: 1 !important;
         visibility: visible !important;
         transform: none !important;
-        margin: 20px auto !important;
+        margin: 20px 0 !important;
+        inset: auto !important;
     }
 }

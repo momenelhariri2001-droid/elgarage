@@ -615,6 +615,11 @@ function initHeroFade() {
 
 function initThree() {
 
+    if (window.innerWidth <= 900) {
+    if (car3DContainer) car3DContainer.style.display = 'none';
+    return; // مش هنشغل الـ Three.js أصلاً على الموبايل
+}
+
     if (!car3DContainer) {
 
         console.error(
@@ -2153,6 +2158,16 @@ function initCinematicScroll() {
     ScrollTrigger.getAll().forEach(trigger => {
         if (trigger.trigger === carExperience) trigger.kill();
     });
+
+    // 👈 حط الشرط هنا:
+    if (window.innerWidth <= 900) {
+        if (car3DContainer) car3DContainer.style.display = 'none';
+        return;
+    }
+
+    // --- باقي كود الديسكتوب يكمل هنا ---
+    gsap.set(garageLogo, { clearProps: "transform", opacity: 1, scale: 1, x: 0, y: 0 });
+    // ... باقي الـ timeline
 
     const isMobile = window.innerWidth <= 900;
 
