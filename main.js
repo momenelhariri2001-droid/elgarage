@@ -2148,424 +2148,67 @@ function initCinematicScroll() {
         return;
     }
 
-
     if (cinematicTimeline) {
-
         cinematicTimeline.kill();
-
-        cinematicTimeline =
-            null;
+        cinematicTimeline = null;
     }
 
-
-    ScrollTrigger.getAll()
-        .forEach(
-            trigger => {
-
-                if (
-                    trigger.trigger ===
-                    carExperience
-                ) {
-
-                    trigger.kill();
-                }
-            }
-        );
-
-
-    gsap.set(
-        garageLogo,
-        {
-
-            clearProps: "transform",
-
-            opacity: 1,
-
-            scale: 1,
-
-            x: 0,
-
-            y: 0
+    ScrollTrigger.getAll().forEach(trigger => {
+        if (trigger.trigger === carExperience) {
+            trigger.kill();
         }
-    );
-
-
-    gsap.set(
-        ".car-title-overlay",
-        {
-
-            opacity: 0,
-
-            y: 35,
-
-            x: 0,
-
-            scale: 1
-        }
-    );
-
-
-    gsap.set(
-        cinematicCard,
-        {
-
-            opacity: 0,
-
-            x: 100
-        }
-    );
-
-
-    gsap.set(
-        [
-            storyEngine,
-            storyPerformance,
-            storySpeed,
-            storyPriceItem
-        ],
-        {
-
-            opacity: 0,
-
-            x: -100
-        }
-    );
-
-
-    gsap.set(
-        car3DContainer,
-        {
-
-            opacity: 1,
-
-            scale: 1
-        }
-    );
-
-
-    gsap.set(
-        finalDetails,
-        {
-
-            opacity: 0,
-
-            y: 60
-        }
-    );
-
-
-    cinematicTimeline =
-    gsap.timeline({
-
-        scrollTrigger: {
-
-            trigger:
-                carExperience,
-
-            start:
-                "top top",
-
-            end:
-                "+=3000", // قللنا المسافة من 5600 لـ 3000 عشان السكرول يكون خفيف ومش محشور
-
-            scrub:
-                1,
-
-            pin:
-                window.innerWidth > 768, // هيعمل بين للكمبيوتر/التابلت ومش هيعلق على الموبايل
-
-            anticipatePin:
-                1,
-
-            invalidateOnRefresh:
-                true
-        }
-        
-        
     });
 
-    /*
-       LOGO
-    */
+    const isMobile = window.innerWidth <= 900;
 
-    cinematicTimeline.to(
-        garageLogo,
-        {
+    // لو موبايل: اظهر العناصر مباشرة بدون تدوخ الـ ScrollTrigger والـ Timeline
+    if (isMobile) {
+        gsap.set(garageLogo, { opacity: 1, scale: 1, x: 0, y: 0 });
+        gsap.set(".car-title-overlay", { opacity: 1, y: 0, scale: 1 });
+        gsap.set(cinematicCard, { opacity: 1, x: 0, y: 0 });
+        gsap.set([storyEngine, storyPerformance, storySpeed, storyPriceItem], { opacity: 1, x: 0 });
+        gsap.set(car3DContainer, { opacity: 1, scale: 1 });
+        gsap.set(finalDetails, { opacity: 1, y: 0 });
+        return; // خروج للموبايل تماماً من تعقيد الـ Timeline
+    }
 
-            opacity: 0,
+    // --- ديسكتوب / تابلت فقط: الـ Timeline الأصلي ---
+    gsap.set(garageLogo, { clearProps: "transform", opacity: 1, scale: 1, x: 0, y: 0 });
+    gsap.set(".car-title-overlay", { opacity: 0, y: 35, x: 0, scale: 1 });
+    gsap.set(cinematicCard, { opacity: 0, x: 100 });
+    gsap.set([storyEngine, storyPerformance, storySpeed, storyPriceItem], { opacity: 0, x: -100 });
+    gsap.set(car3DContainer, { opacity: 1, scale: 1 });
+    gsap.set(finalDetails, { opacity: 0, y: 60 });
 
-            scale: 0.92,
-
-            duration: 0.8,
-
-            ease: "power2.out"
+    cinematicTimeline = gsap.timeline({
+        scrollTrigger: {
+            trigger: carExperience,
+            start: "top top",
+            end: "+=4000",
+            scrub: 1,
+            pin: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true
         }
-    );
-
-
-    /*
-       TITLE
-    */
-
-    cinematicTimeline.to(
-        ".car-title-overlay",
-        {
-
-            opacity: 1,
-
-            y: 0,
-
-            duration: 0.9,
-
-            ease: "power3.out"
-        }
-    );
-
-
-    cinematicTimeline.to(
-        {},
-        {
-            duration: 0.45
-        }
-    );
-
-
-    cinematicTimeline.to(
-        ".car-title-overlay",
-        {
-
-            opacity: 0,
-
-            y: -25,
-
-            scale: 0.97,
-
-            duration: 0.75,
-
-            ease: "power2.inOut"
-        }
-    );
-
-
-    /*
-       CARD
-    */
-
-    cinematicTimeline.to(
-        cinematicCard,
-        {
-
-            opacity: 1,
-
-            x: 0,
-
-            duration: 0.9,
-
-            ease: "power3.out"
-        }
-    );
-
-
-    cinematicTimeline.to(
-        {},
-        {
-            duration: 0.35
-        }
-    );
-
-
-    /*
-       ENGINE
-    */
-
-    cinematicTimeline.to(
-        storyEngine,
-        {
-
-            opacity: 1,
-
-            x: 0,
-
-            duration: 0.65,
-
-            ease: "power3.out"
-        }
-    );
-
-
-    cinematicTimeline.to(
-        storyEngine,
-        {
-
-            opacity: 0,
-
-            x: -100,
-
-            duration: 0.55,
-
-            ease: "power2.in"
-        }
-    );
-
-
-    /*
-       PERFORMANCE
-    */
-
-    cinematicTimeline.to(
-        storyPerformance,
-        {
-
-            opacity: 1,
-
-            x: 0,
-
-            duration: 0.65,
-
-            ease: "power3.out"
-        }
-    );
-
-
-    cinematicTimeline.to(
-        storyPerformance,
-        {
-
-            opacity: 0,
-
-            x: -100,
-
-            duration: 0.55,
-
-            ease: "power2.in"
-        }
-    );
-
-
-    /*
-       SPEED
-    */
-
-    cinematicTimeline.to(
-        storySpeed,
-        {
-
-            opacity: 1,
-
-            x: 0,
-
-            duration: 0.65,
-
-            ease: "power3.out"
-        }
-    );
-
-
-    cinematicTimeline.to(
-        storySpeed,
-        {
-
-            opacity: 0,
-
-            x: -100,
-
-            duration: 0.55,
-
-            ease: "power2.in"
-        }
-    );
-
-
-    /*
-       PRICE
-    */
-
-    cinematicTimeline.to(
-        storyPriceItem,
-        {
-
-            opacity: 1,
-
-            x: 0,
-
-            duration: 0.65,
-
-            ease: "power3.out"
-        }
-    );
-
-
-    cinematicTimeline.to(
-        storyPriceItem,
-        {
-
-            opacity: 0,
-
-            x: -100,
-
-            duration: 0.55,
-
-            ease: "power2.in"
-        }
-    );
-
-
-    /*
-       CARD OUT
-    */
-
-    cinematicTimeline.to(
-        cinematicCard,
-        {
-
-            opacity: 0,
-
-            x: 100,
-
-            duration: 0.75,
-
-            ease: "power2.inOut"
-        }
-    );
-
-
-    /*
-       CAR OUT
-    */
-
-    cinematicTimeline.to(
-        car3DContainer,
-        {
-
-            opacity: 0,
-
-            scale: 0.82,
-
-            duration: 1,
-
-            ease: "power3.inOut"
-        }
-    );
-
-
-    /*
-       FINAL
-    */
-
-    cinematicTimeline.to(
-        finalDetails,
-        {
-
-            opacity: 1,
-
-            y: 0,
-
-            duration: 1,
-
-            ease: "power3.out"
-        }
-    );
-
+    });
+
+    cinematicTimeline.to(garageLogo, { opacity: 0, scale: 0.92, duration: 0.8 });
+    cinematicTimeline.to(".car-title-overlay", { opacity: 1, y: 0, duration: 0.9 });
+    cinematicTimeline.to({}, { duration: 0.45 });
+    cinematicTimeline.to(".car-title-overlay", { opacity: 0, y: -25, scale: 0.97, duration: 0.75 });
+    cinematicTimeline.to(cinematicCard, { opacity: 1, x: 0, duration: 0.9 });
+    cinematicTimeline.to({}, { duration: 0.35 });
+    cinematicTimeline.to(storyEngine, { opacity: 1, x: 0, duration: 0.65 });
+    cinematicTimeline.to(storyEngine, { opacity: 0, x: -100, duration: 0.55 });
+    cinematicTimeline.to(storyPerformance, { opacity: 1, x: 0, duration: 0.65 });
+    cinematicTimeline.to(storyPerformance, { opacity: 0, x: -100, duration: 0.55 });
+    cinematicTimeline.to(storySpeed, { opacity: 1, x: 0, duration: 0.65 });
+    cinematicTimeline.to(storySpeed, { opacity: 0, x: -100, duration: 0.55 });
+    cinematicTimeline.to(storyPriceItem, { opacity: 1, x: 0, duration: 0.65 });
+    cinematicTimeline.to(storyPriceItem, { opacity: 0, x: -100, duration: 0.55 });
+    cinematicTimeline.to(cinematicCard, { opacity: 0, x: 100, duration: 0.75 });
+    cinematicTimeline.to(car3DContainer, { opacity: 0, scale: 0.82, duration: 1 });
+    cinematicTimeline.to(finalDetails, { opacity: 1, y: 0, duration: 1 });
 
     ScrollTrigger.refresh();
 }
