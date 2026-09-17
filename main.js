@@ -716,18 +716,11 @@ function initThree() {
     );
 
 
-    car3DContainer.style.pointerEvents =
-        "auto";
+    car3DContainer.style.pointerEvents = "auto";
+car3DContainer.style.touchAction = "pan-y";
 
-    car3DContainer.style.touchAction =
-        "none";
-
-
-    renderer.domElement.style.pointerEvents =
-        "auto";
-
-    renderer.domElement.style.touchAction =
-        "none";
+renderer.domElement.style.pointerEvents = "auto";
+renderer.domElement.style.touchAction = "pan-y";
 
     renderer.domElement.style.cursor =
         "grab";
@@ -2262,33 +2255,34 @@ function initCinematicScroll() {
 
 
     cinematicTimeline =
-        gsap.timeline({
+    gsap.timeline({
 
-            scrollTrigger: {
+        scrollTrigger: {
 
-                trigger:
-                    carExperience,
+            trigger:
+                carExperience,
 
-                start:
-                    "top top",
+            start:
+                "top top",
 
-                end:
-                    "+=5600",
+            end:
+                "+=3000", // قللنا المسافة من 5600 لـ 3000 عشان السكرول يكون خفيف ومش محشور
 
-                scrub:
-                    1,
+            scrub:
+                1,
 
-                pin:
-                    true,
+            pin:
+                window.innerWidth > 768, // هيعمل بين للكمبيوتر/التابلت ومش هيعلق على الموبايل
 
-                anticipatePin:
-                    1,
+            anticipatePin:
+                1,
 
-                invalidateOnRefresh:
-                    true
-            }
-        });
-
+            invalidateOnRefresh:
+                true
+        }
+        
+        
+    });
 
     /*
        LOGO
