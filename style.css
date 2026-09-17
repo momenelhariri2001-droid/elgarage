@@ -1020,34 +1020,26 @@ body {
 @media (max-width: 900px) {
     .car-experience {
         height: auto !important;
-        min-height: auto !important;
         position: relative !important;
-        overflow: hidden !important;
-        display: flex;
-        flex-direction: column;
+        overflow: visible !important;
     }
 
     #car3DContainer {
         position: relative !important;
         width: 100% !important;
-        height: 350px !important; /* ارتفاع ثابت ومناسب للجنط/العربية على الموبايل */
-        top: auto !important;
-        left: auto !important;
-        transform: none !important;
+        height: 320px !important;
         z-index: 1;
     }
 
-    /* تخلي النصوص فوق أو تحت الكانفاس بوضع طبيعي من غير absolute متداخل */
+    /* ضمان إن النصوص تظهر تحت بعضها بشكل طبيعي ومن غير تداخل */
     .car-title-overlay,
     .cinematic-card,
-    .story-item {
+    .story-section,
+    .final-details {
         position: relative !important;
-        top: auto !important;
-        left: auto !important;
-        right: auto !important;
-        transform: none !important;
-        margin: 15px auto;
-        opacity: 1 !important; /* ضمان ظهورهم على الموبايل من غير هبل الـ gsap */
+        opacity: 1 !important;
         visibility: visible !important;
+        transform: none !important;
+        margin: 20px auto !important;
     }
 }

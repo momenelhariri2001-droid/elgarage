@@ -2143,33 +2143,25 @@ function loadCar(
 ===================================================== */
 
 function initCinematicScroll() {
-    if (window.innerWidth <= 900) {
-        // لو موبايل، نلغي عك الـ GSAP ونعتمد على الـ Layout العادي
-        return;
-    }
+    if (!carExperience) return;
 
+    // تنظيف قديم
     if (cinematicTimeline) {
         cinematicTimeline.kill();
         cinematicTimeline = null;
     }
-
     ScrollTrigger.getAll().forEach(trigger => {
-        if (trigger.trigger === carExperience) {
-            trigger.kill();
-        }
+        if (trigger.trigger === carExperience) trigger.kill();
     });
 
     const isMobile = window.innerWidth <= 900;
 
-    // لو موبايل: اظهر العناصر مباشرة بدون تدوخ الـ ScrollTrigger والـ Timeline
     if (isMobile) {
-        gsap.set(garageLogo, { opacity: 1, scale: 1, x: 0, y: 0 });
-        gsap.set(".car-title-overlay", { opacity: 1, y: 0, scale: 1 });
-        gsap.set(cinematicCard, { opacity: 1, x: 0, y: 0 });
-        gsap.set([storyEngine, storyPerformance, storySpeed, storyPriceItem], { opacity: 1, x: 0 });
-        gsap.set(car3DContainer, { opacity: 1, scale: 1 });
-        gsap.set(finalDetails, { opacity: 1, y: 0 });
-        return; // خروج للموبايل تماماً من تعقيد الـ Timeline
+        // امسح أي inline styles عملها GSator/JS عشان الـ CSS يشتغل براحته
+        gsap.set([garageLogo, ".car-title-overlay", cinematicCard, storyEngine, storyPerformance, storySpeed, storyPriceItem, car3DContainer, finalDetails], {
+            clearProps: "all"
+        });
+        return; // خروج نهائي للموبايل
     }
 
     // --- ديسكتوب / تابلت فقط: الـ Timeline الأصلي ---
