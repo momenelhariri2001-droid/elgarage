@@ -614,10 +614,6 @@ function initHeroFade() {
 ===================================================== */
 
 function initThree() {
-    if (window.innerWidth <= 900) {
-        if (car3DContainer) car3DContainer.style.display = 'none';
-        return;
-    }
 
     if (!car3DContainer) {
 
@@ -679,21 +675,12 @@ function initThree() {
         });
 
 
-    window.addEventListener('pointerdown', (event) => {
-    const pointer = new THREE.Vector2(
-        (event.clientX / window.innerWidth) * 2 - 1,
-        -(event.clientY / window.innerHeight) * 2 + 1
+    renderer.setPixelRatio(
+        Math.min(
+            window.devicePixelRatio,
+            2
+        )
     );
-    raycaster.setFromCamera(pointer, camera);
-    const intersects = raycaster.intersectObjects(scene.children, true);
-    if (intersects.length > 0) {
-        const clickedObj = intersects[0].object;
-        console.log('Clicked object:', clickedObj.name);
-        
-        // استبدل السطر ده بدالة الاختيار عندك، مثال:
-        // selectCarByMesh(clickedObj);
-    }
-});
 
 
     renderer.setSize(
@@ -729,11 +716,18 @@ function initThree() {
     );
 
 
-    car3DContainer.style.pointerEvents = "auto";
-car3DContainer.style.touchAction = "pan-y";
+    car3DContainer.style.pointerEvents =
+        "auto";
 
-renderer.domElement.style.pointerEvents = "auto";
-renderer.domElement.style.touchAction = "pan-y";
+    car3DContainer.style.touchAction =
+        "none";
+
+
+    renderer.domElement.style.pointerEvents =
+        "auto";
+
+    renderer.domElement.style.touchAction =
+        "none";
 
     renderer.domElement.style.cursor =
         "grab";
@@ -1046,7 +1040,12 @@ function resizeThree() {
     );
 
 
-    
+    renderer.setPixelRatio(
+        Math.min(
+            window.devicePixelRatio,
+            2
+        )
+    );
 }
 
 
@@ -2151,74 +2150,428 @@ function loadCar(
 ===================================================== */
 
 function initCinematicScroll() {
-    if (!carExperience) return;
 
-    // تنظيف قديم
-    if (cinematicTimeline) {
-        cinematicTimeline.kill();
-        cinematicTimeline = null;
-    }
-    ScrollTrigger.getAll().forEach(trigger => {
-        if (trigger.trigger === carExperience) trigger.kill();
-    });
-
-    // 👈 حط الشرط هنا:
-    if (window.innerWidth <= 900) {
-        if (car3DContainer) car3DContainer.style.display = 'none';
+    if (!carExperience) {
         return;
     }
 
-    // --- باقي كود الديسكتوب يكمل هنا ---
-    gsap.set(garageLogo, { clearProps: "transform", opacity: 1, scale: 1, x: 0, y: 0 });
-    // ... باقي الـ timeline
 
-    const isMobile = window.innerWidth <= 900;
+    if (cinematicTimeline) {
 
-    if (isMobile) {
-        // امسح أي inline styles عملها GSator/JS عشان الـ CSS يشتغل براحته
-        gsap.set([garageLogo, ".car-title-overlay", cinematicCard, storyEngine, storyPerformance, storySpeed, storyPriceItem, car3DContainer, finalDetails], {
-            clearProps: "all"
-        });
-        return; // خروج نهائي للموبايل
+        cinematicTimeline.kill();
+
+        cinematicTimeline =
+            null;
     }
 
-    // --- ديسكتوب / تابلت فقط: الـ Timeline الأصلي ---
-    gsap.set(garageLogo, { clearProps: "transform", opacity: 1, scale: 1, x: 0, y: 0 });
-    gsap.set(".car-title-overlay", { opacity: 0, y: 35, x: 0, scale: 1 });
-    gsap.set(cinematicCard, { opacity: 0, x: 100 });
-    gsap.set([storyEngine, storyPerformance, storySpeed, storyPriceItem], { opacity: 0, x: -100 });
-    gsap.set(car3DContainer, { opacity: 1, scale: 1 });
-    gsap.set(finalDetails, { opacity: 0, y: 60 });
 
-    cinematicTimeline = gsap.timeline({
-        scrollTrigger: {
-            trigger: carExperience,
-            start: "top top",
-            end: "+=4000",
-            scrub: 1,
-            pin: true,
-            anticipatePin: 1,
-            invalidateOnRefresh: true
+    ScrollTrigger.getAll()
+        .forEach(
+            trigger => {
+
+                if (
+                    trigger.trigger ===
+                    carExperience
+                ) {
+
+                    trigger.kill();
+                }
+            }
+        );
+
+
+    gsap.set(
+        garageLogo,
+        {
+
+            clearProps: "transform",
+
+            opacity: 1,
+
+            scale: 1,
+
+            x: 0,
+
+            y: 0
         }
-    });
+    );
 
-    cinematicTimeline.to(garageLogo, { opacity: 0, scale: 0.92, duration: 0.8 });
-    cinematicTimeline.to(".car-title-overlay", { opacity: 1, y: 0, duration: 0.9 });
-    cinematicTimeline.to({}, { duration: 0.45 });
-    cinematicTimeline.to(".car-title-overlay", { opacity: 0, y: -25, scale: 0.97, duration: 0.75 });
-    cinematicTimeline.to(cinematicCard, { opacity: 1, x: 0, duration: 0.9 });
-    cinematicTimeline.to({}, { duration: 0.35 });
-    cinematicTimeline.to(storyEngine, { opacity: 1, x: 0, duration: 0.65 });
-    cinematicTimeline.to(storyEngine, { opacity: 0, x: -100, duration: 0.55 });
-    cinematicTimeline.to(storyPerformance, { opacity: 1, x: 0, duration: 0.65 });
-    cinematicTimeline.to(storyPerformance, { opacity: 0, x: -100, duration: 0.55 });
-    cinematicTimeline.to(storySpeed, { opacity: 1, x: 0, duration: 0.65 });
-    cinematicTimeline.to(storySpeed, { opacity: 0, x: -100, duration: 0.55 });
-    cinematicTimeline.to(storyPriceItem, { opacity: 1, x: 0, duration: 0.65 });
-    cinematicTimeline.to(storyPriceItem, { opacity: 0, x: -100, duration: 0.55 });
-    cinematicTimeline.to(cinematicCard, { opacity: 0, x: 100, duration: 0.75 });
-    cinematicTimeline.to(car3DContainer, { opacity: 0, scale: 0.82, duration: 1 });
-    cinematicTimeline.to(finalDetails, { opacity: 1, y: 0, duration: 1 });
+
+    gsap.set(
+        ".car-title-overlay",
+        {
+
+            opacity: 0,
+
+            y: 35,
+
+            x: 0,
+
+            scale: 1
+        }
+    );
+
+
+    gsap.set(
+        cinematicCard,
+        {
+
+            opacity: 0,
+
+            x: 100
+        }
+    );
+
+
+    gsap.set(
+        [
+            storyEngine,
+            storyPerformance,
+            storySpeed,
+            storyPriceItem
+        ],
+        {
+
+            opacity: 0,
+
+            x: -100
+        }
+    );
+
+
+    gsap.set(
+        car3DContainer,
+        {
+
+            opacity: 1,
+
+            scale: 1
+        }
+    );
+
+
+    gsap.set(
+        finalDetails,
+        {
+
+            opacity: 0,
+
+            y: 60
+        }
+    );
+
+
+    cinematicTimeline =
+        gsap.timeline({
+
+            scrollTrigger: {
+
+                trigger:
+                    carExperience,
+
+                start:
+                    "top top",
+
+                end:
+                    "+=5600",
+
+                scrub:
+                    1,
+
+                pin:
+                    true,
+
+                anticipatePin:
+                    1,
+
+                invalidateOnRefresh:
+                    true
+            }
+        });
+
+
+    /*
+       LOGO
+    */
+
+    cinematicTimeline.to(
+        garageLogo,
+        {
+
+            opacity: 0,
+
+            scale: 0.92,
+
+            duration: 0.8,
+
+            ease: "power2.out"
+        }
+    );
+
+
+    /*
+       TITLE
+    */
+
+    cinematicTimeline.to(
+        ".car-title-overlay",
+        {
+
+            opacity: 1,
+
+            y: 0,
+
+            duration: 0.9,
+
+            ease: "power3.out"
+        }
+    );
+
+
+    cinematicTimeline.to(
+        {},
+        {
+            duration: 0.45
+        }
+    );
+
+
+    cinematicTimeline.to(
+        ".car-title-overlay",
+        {
+
+            opacity: 0,
+
+            y: -25,
+
+            scale: 0.97,
+
+            duration: 0.75,
+
+            ease: "power2.inOut"
+        }
+    );
+
+
+    /*
+       CARD
+    */
+
+    cinematicTimeline.to(
+        cinematicCard,
+        {
+
+            opacity: 1,
+
+            x: 0,
+
+            duration: 0.9,
+
+            ease: "power3.out"
+        }
+    );
+
+
+    cinematicTimeline.to(
+        {},
+        {
+            duration: 0.35
+        }
+    );
+
+
+    /*
+       ENGINE
+    */
+
+    cinematicTimeline.to(
+        storyEngine,
+        {
+
+            opacity: 1,
+
+            x: 0,
+
+            duration: 0.65,
+
+            ease: "power3.out"
+        }
+    );
+
+
+    cinematicTimeline.to(
+        storyEngine,
+        {
+
+            opacity: 0,
+
+            x: -100,
+
+            duration: 0.55,
+
+            ease: "power2.in"
+        }
+    );
+
+
+    /*
+       PERFORMANCE
+    */
+
+    cinematicTimeline.to(
+        storyPerformance,
+        {
+
+            opacity: 1,
+
+            x: 0,
+
+            duration: 0.65,
+
+            ease: "power3.out"
+        }
+    );
+
+
+    cinematicTimeline.to(
+        storyPerformance,
+        {
+
+            opacity: 0,
+
+            x: -100,
+
+            duration: 0.55,
+
+            ease: "power2.in"
+        }
+    );
+
+
+    /*
+       SPEED
+    */
+
+    cinematicTimeline.to(
+        storySpeed,
+        {
+
+            opacity: 1,
+
+            x: 0,
+
+            duration: 0.65,
+
+            ease: "power3.out"
+        }
+    );
+
+
+    cinematicTimeline.to(
+        storySpeed,
+        {
+
+            opacity: 0,
+
+            x: -100,
+
+            duration: 0.55,
+
+            ease: "power2.in"
+        }
+    );
+
+
+    /*
+       PRICE
+    */
+
+    cinematicTimeline.to(
+        storyPriceItem,
+        {
+
+            opacity: 1,
+
+            x: 0,
+
+            duration: 0.65,
+
+            ease: "power3.out"
+        }
+    );
+
+
+    cinematicTimeline.to(
+        storyPriceItem,
+        {
+
+            opacity: 0,
+
+            x: -100,
+
+            duration: 0.55,
+
+            ease: "power2.in"
+        }
+    );
+
+
+    /*
+       CARD OUT
+    */
+
+    cinematicTimeline.to(
+        cinematicCard,
+        {
+
+            opacity: 0,
+
+            x: 100,
+
+            duration: 0.75,
+
+            ease: "power2.inOut"
+        }
+    );
+
+
+    /*
+       CAR OUT
+    */
+
+    cinematicTimeline.to(
+        car3DContainer,
+        {
+
+            opacity: 0,
+
+            scale: 0.82,
+
+            duration: 1,
+
+            ease: "power3.inOut"
+        }
+    );
+
+
+    /*
+       FINAL
+    */
+
+    cinematicTimeline.to(
+        finalDetails,
+        {
+
+            opacity: 1,
+
+            y: 0,
+
+            duration: 1,
+
+            ease: "power3.out"
+        }
+    );
+
 
     ScrollTrigger.refresh();
 }

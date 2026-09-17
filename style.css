@@ -12,14 +12,14 @@
     padding: 0;
 }
 
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
+html {
+    background: #000;
+    scroll-behavior: smooth;
+}
+
+body {
     background: #000;
     color: #fff;
-    scroll-behavior: smooth;
     overflow-x: hidden;
     font-family: "Segoe UI", Tahoma, Arial, sans-serif;
 }
@@ -339,21 +339,24 @@ html, body {
 
 .experience-header {
     position: absolute;
+
     top: 6%;
     left: 50%;
+
     transform: translateX(-50%);
+
     width: 100%;
+
     display: flex;
+
     justify-content: center;
     align-items: center;
-    text-align: center;
-    z-index: 20;
-    pointer-events: auto; /* <--- اعدلها لـ auto عشان الأزرار اللي جواه تشتغل */
-}
 
-/* لو فيه عناصر فرعية جوا الهيدر مش عايزها تقفل السكرول بس عايز الأزرار تشتغل */
-.experience-header * {
-    pointer-events: auto;
+    text-align: center;
+
+    z-index: 20;
+
+    pointer-events: none;
 }
 
 .section-tag {
@@ -1007,35 +1010,5 @@ html, body {
 
     .final-details h2 {
         font-size: 2.8rem;
-    }
-}
-
-#car3DContainer, 
-#car3DContainer canvas {
-    touch-action: pan-y !important;
-}
-@media (max-width: 900px) {
-    .car-experience {
-        height: auto !important;
-        min-height: unset !important;
-        position: relative !important;
-        overflow: visible !important;
-        padding: 40px 16px !important;
-    }
-
-    #car3DContainer {
-        display: none !important; /* إخفاء الكانفاس الثقيل تماماً على الموبايل */
-    }
-
-    .car-title-overlay,
-    .cinematic-card,
-    .story-section,
-    .final-details {
-        position: relative !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: none !important;
-        margin: 20px 0 !important;
-        inset: auto !important;
     }
 }
