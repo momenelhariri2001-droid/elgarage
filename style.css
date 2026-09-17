@@ -339,24 +339,21 @@ body {
 
 .experience-header {
     position: absolute;
-
     top: 6%;
     left: 50%;
-
     transform: translateX(-50%);
-
     width: 100%;
-
     display: flex;
-
     justify-content: center;
     align-items: center;
-
     text-align: center;
-
     z-index: 20;
+    pointer-events: auto; /* <--- اعدلها لـ auto عشان الأزرار اللي جواه تشتغل */
+}
 
-    pointer-events: none;
+/* لو فيه عناصر فرعية جوا الهيدر مش عايزها تقفل السكرول بس عايز الأزرار تشتغل */
+.experience-header * {
+    pointer-events: auto;
 }
 
 .section-tag {

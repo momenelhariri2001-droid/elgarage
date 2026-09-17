@@ -614,11 +614,10 @@ function initHeroFade() {
 ===================================================== */
 
 function initThree() {
-
     if (window.innerWidth <= 900) {
-    if (car3DContainer) car3DContainer.style.display = 'none';
-    return; // مش هنشغل الـ Three.js أصلاً على الموبايل
-}
+        if (car3DContainer) car3DContainer.style.display = 'none';
+        return;
+    }
 
     if (!car3DContainer) {
 
